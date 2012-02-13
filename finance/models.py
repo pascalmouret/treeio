@@ -131,7 +131,7 @@ class Asset(Object):
                                                        (1/(self.lifetime*365)))))
                 for g in range(1, days_from_purchase):
                     i -= (i * daily_depreciation_rate)
-                reducing = round(self.initial_value - i, 2)
+                reducing = self.initial_value - i
                 if reducing > straight:
                     return reducing.quantize(Decimal('.01'), rounding = ROUND_UP)
                 else:
