@@ -65,7 +65,7 @@ class CronJob(multiprocessing.Process):
             self._stopped = True
         except:
             import traceback
-            from hardtree import core
+            from treeio import core
             from django.core.mail import mail_admins
             exc_type, exc_value, exc_traceback = sys.exc_info()
             subject = "CRON Exception for " + unicode(self) + ": " + unicode(exc_type) + " " + unicode(exc_value)
@@ -142,8 +142,7 @@ class CronRunner():
         cronlogger.info('Adding ' + unicode(len(self.jobs)) + ' jobs to the queue.')
         for db in self.databases:
             cronlogger.debug('ADDING JOBS FOR ' + unicode(db))
-            cache_key = 'hardtree_' + db + '_last'
-            last_accessed = cache.get(cache_key)
+            last_accessed = time.time()
             if last_accessed:
                 if last_accessed >= time.time() - int(self.qualify_run):
                     for job in self.jobs:
