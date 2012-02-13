@@ -68,6 +68,8 @@ class BaseEmail(Thread):
         ssl = False
         
         if "gmail.com" in server or "googlemail.com" in server:
+            if self.ssl:
+                port = 465
             port = 587
             ssl = False
         elif server == "plus.smtp.mail.yahoo.com":
