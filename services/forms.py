@@ -288,7 +288,7 @@ class TicketRecordForm(forms.ModelForm):
             if ticket.message or toaddr:
                 reply = Message()
                 if settings.SERVICE_MAIL_FROM:
-                    reply.author = settings.SERVICE_MAIL_FROM
+                    reply.author = Contact.objects.get(name=settings.SERVICE_MAIL_FROM)
                 else:
                     reply.author = instance.sender
                 reply.body = instance.body
