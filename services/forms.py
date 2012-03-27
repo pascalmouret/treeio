@@ -287,7 +287,10 @@ class TicketRecordForm(forms.ModelForm):
             toaddr = ticket.caller.get_email()
             if ticket.message or toaddr:
                 reply = Message()
-                reply.author = instance.sender
+                if settings.SERVICE_MAIL_FROM:
+                    reply.author = settings.SERVICE_MAIL_FROM
+                else:
+                    reply.author = instance.sender
                 reply.body = instance.body
                 reply.auto_notify = False
                 if ticket.message:
