@@ -59,11 +59,7 @@ class EmailMessage(Thread):
         if message.reply_to:
             user = message.reply_to.author.related_user
                 
-            if settings.SERVICE_MAIL_FROM:
-                original_author = settings.SERVICE_MAIL_FROM
-            else:
-                original_author = self.get_original_message_author_email()
-                
+            original_author = self.get_original_message_author_email()   
             reply_author = self.get_reply_message_author_email()
     
             # if there is no related user and email for message.author
