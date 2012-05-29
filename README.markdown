@@ -1,3 +1,5 @@
+[![Build Status](https://secure.travis-ci.org/treeio/treeio.png?branch=master)](http://travis-ci.org/treeio/treeio)
+
 ==========================
 Tree.io Business Management Platform
 ==========================
@@ -41,7 +43,9 @@ Install services (In Production)
 ------------------------
 
 1.  Install database `sudo apt-get install mysql-server` (Aside from MySQL you can also use Postgre, SQLite or OracleDB)
-1.  Install web server `sudo apt-get install nginx` (You may also use Apache following instructions for setting up Django with Apache)
+1.  Install web server `sudo apt-get install nginx` 
+
+Alternatively you can use Apache, see this [community post](http://tree.io/en/community/questions/186/treeio-with-wsgi-for-apache-deploy) for an example configuration.
 
 Create a fork and clone this repository
 ------------------------
@@ -85,3 +89,8 @@ Support
 Commercial installation and support is available from Tree.io Ltd, London, UK.
 Our community support forum is the first stop for any questions http://www.tree.io/community
 Please see http://www.tree.io/ or contact info@tree.io for more details.
+
+Acknowledgements
+================
+
+French translation contributed by morago.com
