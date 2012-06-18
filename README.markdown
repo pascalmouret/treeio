@@ -8,6 +8,7 @@ Tree.io is a powerful business management platform with tons of great features i
 
 For FAQ see the Tree.io community site http://www.tree.io/community/
 
+There is also a pre-built micro [Amazon AMI Image](https://console.aws.amazon.com/ec2/home?region=us-east-1#launchAmi=ami-6af22f03&source=tree.io) available.
 
 License
 =======
@@ -35,7 +36,7 @@ Install any dependencies
 1.  Update your local cache `sudo apt-get update`
 1.  Upgrade your system `sudo apt-get upgrade` (Recommended but optional)
 1.  `sudo apt-get install python build-essential python-dev`
-1.  `sudo apt-get build-dep python-lxml python-imaging
+1.  `sudo apt-get build-dep python-lxml python-imaging`
 1.  `sudo apt-get install git python-flup python-pip`
 
 
@@ -47,14 +48,13 @@ Install services (In Production)
 
 Alternatively you can use Apache, see this [community post](http://tree.io/en/community/questions/186/treeio-with-wsgi-for-apache-deploy) for an example configuration.
 
-Create a fork and clone this repository
+Create a clone of this repository
 ------------------------
 
-1.  Fork this repository by clicking Fork in the top toolbar (Forking will make it easier to contribute as you commit changes and have them merged into this Tree.io master repository)
-1.  Create a folder called treeio `mkdir treeio && cd treeio` (**Tree.io must be run inside another folder called treeio to work correctly**)
-1.  Clone the repo by running: `git clone git@github.com:your_git/treeio.git`
-1.  Update your virtual environment `python manage.py update_ve`
-1.  Perform the patch `./bin/patch`
+1.  Clone the repo by running: `git clone https://github.com/treeio/treeio.git`
+1.  Install dependencies: `pip install -r requirements.pip`
+1.  Run the patch: `python related_fields_patch.py`
+
 
 Install the database (Example showing MySQL)
 ------------------------
