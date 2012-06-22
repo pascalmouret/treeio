@@ -3,6 +3,7 @@
 # This file is part of Treeio.
 # License www.tree.io/license
 
+from django.conf import settings
 from django.db.models import Q, get_models, CharField, TextField
 from treeio.core.models import Object
 from treeio.core.conf import settings
@@ -21,6 +22,8 @@ def search(term):
     query = Q()
     #query_dict = {}
     attr = 'search'
+    if settings.DATABASES['default']['ENGINE'].find('mysql') == -1:
+        attr = 'contains'
     if term and term[0] == '*':
         attr = 'icontains'
         term = term[1:]
