@@ -51,7 +51,13 @@ class EmailStream(EmailReceiver):
 
         # check if the message is already retrieved
         threshold = datetime.datetime.now() - datetime.timedelta(minutes=20)
-        existing = Message.objects.filter(stream=self.stream, title=attrs.subject, author=email_author, date_created__gte=threshold).exists()
+        existing = Message.objects.filter(stream=self.stream, title=attrs.subject, author=email_author,
+                                          date_created__gte=threshold).exists()
+        if not existing:
+            # check if it could be a renamed ticket message
+            existing = Message.objects.filter(stream=self.stream, title__contains='[#', title__contains=']',
+                                              title__contains=attrs.subject, author=email_author,
+                                              date_created__gte=threshold).exists()
         if not existing:
             message = None
             if attrs.subject[:3] in MAIL_PREF:
