@@ -55,8 +55,7 @@ class EmailStream(EmailReceiver):
                                           date_created__gte=threshold).exists()
         if not existing:
             # check if it could be a renamed ticket message
-            existing = Message.objects.filter(stream=self.stream, title__contains='[#', title__contains=']',
-                                              title__contains=attrs.subject, author=email_author,
+            existing = Message.objects.filter(stream=self.stream, title__regex=r'\[#\d*\] %s' % attrs.subject, author=email_author,
                                               date_created__gte=threshold).exists()
         if not existing:
             message = None
@@ -71,8 +70,7 @@ class EmailStream(EmailReceiver):
                     original = Message.objects.filter(query).order_by('-date_created')[:1][0]
                     message = Message(title=attrs.subject, body=attrs.body, author=email_author,
                                     stream=self.stream, reply_to=original)
-                    if attrs.email_date:
-                        message.date_created = attrs.email_date
+                    message.date_created = datetime.datetime.now()
 
                     message.save()
                     message.copy_permissions(original)
@@ -81,8 +79,7 @@ class EmailStream(EmailReceiver):
                     pass
             if not message:
                 message = Message(title=attrs.subject, body=attrs.body, author=email_author, stream=self.stream)
-                if attrs.email_date:
-                    message.date_created = attrs.email_date
+                message.date_created = datetime.datetime.now()
                 message.save()
                 message.copy_permissions(self.stream)
                 message.recipients.add(email_author)
