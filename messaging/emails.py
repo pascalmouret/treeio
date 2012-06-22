@@ -16,6 +16,10 @@ from treeio.identities.models import Contact, ContactType
 
 from treeio.core.mail import EmailReceiver
 
+import datetime
+
+MAIL_PREF = ['Re:', 'RE:', 'Aw:', 'AW:',]
+
 class EmailStream(EmailReceiver):
     "EmailStream"
     active = False
@@ -46,12 +50,12 @@ class EmailStream(EmailReceiver):
             email_author.copy_permissions(self.stream)
 
         # check if the message is already retrieved
-        existing = Message.objects.filter(stream=self.stream, title=attrs.subject, author=email_author, body=attrs.body).exists()
+        threshold = datetime.datetime.now() - datetime.timedelta(minutes=20)
+        existing = Message.objects.filter(stream=self.stream, title=attrs.subject, author=email_author, date_created__gte=threshold).exists()
         if not existing:
             message = None
-            if attrs.subject[:3] == 'Re:':
-                # process replies
-                if attrs.subject[:4] == 'Re: ':
+            if attrs.subject[:3] in MAIL_PREF:
+                if attrs.subject[3] == ' ':
                     original_subject = attrs.subject[4:]
                 else:
                     original_subject = attrs.subject[3:]
