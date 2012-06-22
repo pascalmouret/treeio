@@ -23,7 +23,7 @@ def search(term):
     #query_dict = {}
     attr = 'search'
     if settings.DATABASES['default']['ENGINE'].find('mysql') == -1:
-        attr = 'contains'
+        attr = 'icontains'
     if term and term[0] == '*':
         attr = 'icontains'
         term = term[1:]
