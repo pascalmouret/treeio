@@ -294,6 +294,13 @@ def create_ticket_from_message(sender, instance, created, **kwargs):
                 record.save()
                 record.about.add(ticket)
                 ticket.set_last_updated()
+                try:
+                    conf = ModuleSetting.get_for_module('treeio.services', 'default_ticket_status')[0]
+                    ticket.status = TicketStatus.objects.get(pk=long(conf.value))
+                except:
+                    statuses = TicketStatus.objects.all()
+                    ticket.status = statuses[0]
+                ticket.save()
         else:
             stream = instance.stream
             queues = TicketQueue.objects.filter(message_stream=stream)
