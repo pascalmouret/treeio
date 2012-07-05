@@ -83,9 +83,12 @@ def services_message_mail(context, record):
 
     is_mail = False
     delta = datetime.timedelta(seconds=5)
-    msg = Message.objects.get(body=record.body, author=record.sender,
-                              date_created__range=(record.date_created-delta, record.date_created+delta))
-    is_mail = msg.is_mail
+    try:
+        msg = Message.objects.get(body=record.body, author=record.sender,
+                                  date_created__range=(record.date_created-delta, record.date_created+delta))
+        is_mail = msg.is_mail
+    except:
+        pass
 
     return Markup(render_to_string('services/tags/mail_marker',
                                {'is_mail': is_mail},
