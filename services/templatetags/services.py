@@ -10,6 +10,9 @@ from coffin import template
 from treeio.core.rendering import render_to_string
 from jinja2 import contextfunction, Markup
 from django.template import RequestContext
+from treeio.messaging.models import MessageStream, Message
+
+import datetime
 
 register = template.Library()
 
@@ -69,3 +72,24 @@ def services_queue_list(context, queues, skip_group=False):
                                response_format=response_format))
 
 register.object(services_queue_list)
+
+@contextfunction
+def services_message_mail(context, record):
+    request = context['request']
+
+    response_format = 'html'
+    if 'response_format' in context:
+        response_format = context['response_format']
+
+    is_mail = False
+    delta = datetime.timedelta(seconds=5)
+    msg = Message.objects.get(body=record.body, author=record.sender,
+                              date_created__range=(record.date_created-delta, record.date_created+delta))
+    is_mail = msg.is_mail
+
+    return Markup(render_to_string('services/tags/mail_marker',
+                               {'is_mail': is_mail},
+                               context_instance=RequestContext(request),
+                               response_format=response_format))
+
+register.object(services_message_mail)

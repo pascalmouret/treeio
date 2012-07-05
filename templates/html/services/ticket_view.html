@@ -186,6 +186,7 @@
           <a href="{{ sender.get_absolute_url() }}" class="popup-link">{{ sender }}</a>
           {% endif %}
           {% endif %}
+          {{ services_message_mail(record) }}
         </span>
         {% if record.record_type != 'manual' and record.record_type != 'share' %}
         <span class="news-record-inline news-record-body-{{ record.record_type }}">

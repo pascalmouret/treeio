@@ -72,6 +72,7 @@ class EmailStream(EmailReceiver):
                                     stream=self.stream, reply_to=original)
                     message.date_created = datetime.datetime.now()
 
+                    message.is_mail = True
                     message.save()
                     message.copy_permissions(original)
                     original.read_by.clear()
@@ -80,6 +81,7 @@ class EmailStream(EmailReceiver):
             if not message:
                 message = Message(title=attrs.subject, body=attrs.body, author=email_author, stream=self.stream)
                 message.date_created = datetime.datetime.now()
+                message.is_mail = True
                 message.save()
                 message.copy_permissions(self.stream)
                 message.recipients.add(email_author)
@@ -134,10 +136,15 @@ class EmailMessage(Thread):
                 password = message.stream.outgoing_password
                 
                 port, ssl = self.get_smtp_port()
-                
-                BaseEmail(message.stream.outgoing_server_name, 
-                    login, password, fromaddr, toaddr, subject,
-                    body, signature=None, html=html, port=port, ssl=ssl).send_email()
+                try:
+                    BaseEmail(message.stream.outgoing_server_name,
+                        login, password, fromaddr, toaddr, subject,
+                        body, signature=None, html=html, port=port, ssl=ssl).send_email()
+                except Exception:
+                    raise Exception
+                else:
+                    self.message.is_mail = True
+                    self.message.save()
             
             else:
                 SystemEmail(toaddr, subject, body, signature=None, html=html).send_email()

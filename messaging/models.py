@@ -107,6 +107,7 @@ class Message(Object):
     reply_to = models.ForeignKey('self', blank=True, null=True, related_name='child_set')
     read_by = models.ManyToManyField(User, null=True, blank=True, related_name='read_by_user')
     mlist = models.ForeignKey(MailingList, blank=True, null=True, related_name='mlist')
+    is_mail = models.BooleanField(blank=True, null=False, default=False)
     
     access_inherit = ('stream', '*module', '*user')
     
@@ -149,7 +150,12 @@ class Message(Object):
         "Send email"
         email = EmailMessage(self)
         if self.stream and self.stream.outgoing_server_name:
-            email.send_email()
+            try:
+                email.send_email()
+            except Exception:
+                raise Exception
+            else:
+                self.is_mail = True
         
         
     def get_original_message_author_email(self):

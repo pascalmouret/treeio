@@ -80,7 +80,13 @@ class EmailMessage(Thread):
                         body += _('Your message is received and a ticket is created, ticket reference is [%s]') % (self.ticket_record.ticket.reference)
 
                         subject = "[%s] %s\r\n\r\n" % (self.ticket_record.ticket.reference, self.ticket_record.ticket.message.title)
-                        
-                        BaseEmail(message.stream.outgoing_server_name, 
-                            login, password, fromaddr, toaddr, subject,
-                            body).process_email()
+
+                        try:
+                            BaseEmail(message.stream.outgoing_server_name,
+                                login, password, fromaddr, toaddr, subject,
+                                body).process_email()
+                        except Exception:
+                            raise Exception
+                        else:
+                            self.message.is_mail = True
+                            self.message.save()
